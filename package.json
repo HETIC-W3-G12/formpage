@@ -1,12 +1,12 @@
 {
   "name": "ABetterCredit",
   "version": "0.1.0",
-  "description": "ClunchBox Charte Page",
+  "description": "Microcrédit entre particulier",
   "scripts": {
     "dev": "gulp",
     "build": "NODE_ENV=production gulp build"
   },
-  "author": "samy.yahia@hetic.net",
+  "author": "maeva.pasteur@hetic.net",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.0",

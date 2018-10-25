@@ -1,4 +1,4 @@
-# ClunchBox Charte
+# A Better Credit
 
 ### Npm
 ```shell

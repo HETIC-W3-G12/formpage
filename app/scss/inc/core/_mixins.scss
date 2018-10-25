@@ -1,0 +1,262 @@
+@mixin transform($transforms) {
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+@mixin box-shadow($shadow) {
+  -moz-box-shadow: $shadow;
+  -webkit-box-shadow: $shadow;
+  -o-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+@mixin animation($content){
+  -webkit-animation: $content;
+  -moz-animation: $content;
+  -o-animation: $content;
+  animation: $content;
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder{ @content; }
+  &:-moz-placeholder{ @content; }
+  &::-moz-placeholder{ @content; }
+  &:-ms-input-placeholder{ @content; }
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@mixin transition($content...){
+  -webkit-transition: $content;
+  -moz-transition: $content;
+  -o-transition: $content;
+  -ms-transition: $content;
+  transition: $content;
+}
+
+@mixin border-radius($val){
+  -webkit-border-radius: $val $val $val $val;
+  -moz-border-radius: $val $val $val $val;
+  border-radius: $val $val $val $val;
+}
+
+@mixin m-border-radius($val1, $val2, $val3, $val4){
+  -webkit-border-radius: $val1 $val2 $val3 $val4;
+  -moz-border-radius: $val1 $val2 $val3 $val4;
+  border-radius: $val1 $val2 $val3 $val4;
+}
+
+@mixin blur($amount){
+  filter: blur($amount);
+  -webkit-filter: blur($amount);
+  -moz-filter: blur($amount);
+  -o-filter: blur($amount);
+  -ms-filter: blur($amount);
+  filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius=$amount);
+}
+
+@mixin filter($content){
+  filter: $content;
+  -webkit-filter: $content;
+  -moz-filter: $content;
+  -o-filter: $content;
+  -ms-filter: $content;
+}
+
+@mixin trOrigin($x, $y){
+  -webkit-transform-origin: $x $y;
+  -moz-transform-origin: $x $y;
+  -o-transform-origin: $x $y;
+  -ms-transform-origin: $x $y;
+  transform-origin: $x $y;
+}
+
+@mixin columnCount($count, $ecart, $style, $width, $color:#000000){
+  -moz-column-count:$count;
+  -moz-column-gap:$ecart;
+  -moz-column-rule:$width $style;
+  -webkit-column-count:$count;
+  -webkit-column-gap:$ecart;
+  -webkit-column-rule:$width $style;
+  -o-column-count:$count;
+  -o-column-gap:$ecart;
+  -o-column-rule: $width $style;
+  column-count:$count;
+  column-gap:$ecart;
+  column-rule: $width $style;
+  column-rule-color: $color;
+  column-rule-color: $color;
+  -o-column-rule-color: $color;
+  -webkit-column-rule-color: $color;
+  -moz-column-rule-color: $color;
+  -khtml-column-rule-color: $color;
+}
+
+@mixin user-select(){
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+// String Replace
+// =============================================================================
+
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+// =============================================================================
+// Font Face
+// =============================================================================
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+
+  $extmods: (
+          eot: "?",
+          svg: "#" + str-replace($name, " ", "_")
+  );
+
+  $formats: (
+          otf: "opentype",
+          ttf: "truetype"
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: $style;
+    font-weight: $weight;
+    src: $src;
+  }
+}
+
+@mixin line-height($fontsize, $lineheight ){
+
+  line-height: ($lineheight) + px;
+  line-height: ($lineheight/10) + rem;
+
+  margin-top: (($lineheight - $fontsize)/2 * -1) + px;
+  margin-top: ((($lineheight - $fontsize)/2 * -1) / 10 ) + rem
+}
+
+/* Letter spacing is simpler.. stolen from somewhere */
+@mixin letter-spacing($letterspacing) {
+  letter-spacing: $letterspacing/1000 + em;
+}
+
+/* font-size to rem with backup, stolen from somewhere */
+@mixin font-size($sizeValue: 16, $relative: false) {
+  font-size: ($sizeValue) + px;
+
+  @if ($relative) {
+
+    font-size: pxToEm($sizeValue);
+
+  } @else{
+
+    font-size: pxToRem($sizeValue);
+
+  }
+}
+
+/**
+ * Gives a card depth effect.
+ *
+ * @param {Number} $depth - depth level (between 1 and 5)
+ *
+ * @link http://www.google.com/design/spec/layout/layout-principles.html#layout-principles-dimensionality Google Design
+ *
+ * @requires {function} top-shadow
+ * @requires {function} bottom-shadow
+ */
+@mixin material-shadow($depth, $color: #000) {
+  @if $depth < 1 {
+    box-shadow: none;
+  } @else if $depth > 5 {
+    @warn "Invalid $depth `#{$depth}` for mixin `card`.";
+  } @else {
+    box-shadow: bottom-shadow($depth, $color), top-shadow($depth, $color);
+  }
+}
+
+@mixin underline-from-left($color){
+
+  &:before{
+    position: absolute;
+    z-index: 1;
+    content: "";
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: $color;
+    transform-origin: left;
+    @include transform(scaleX(0));
+    @include transition(transform .3s $easeOutQuad);
+  }
+
+  @media (min-width: $size-mobile+1){
+
+    &:hover{
+
+      &:before{
+        @include transform(scaleX(1));
+      }
+
+    }
+
+  }
+
+}
